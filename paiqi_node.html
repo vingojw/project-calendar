@@ -248,8 +248,8 @@
            var saveObj = we || bc ;
            var er  = this.form.eventRange;
            saveObj.title = this.form.eventName;
-           saveObj.start = er[0] + ' 00:00:00';
-           saveObj.end = er[1] + ' 23:59:59'
+           saveObj.start = moment(er[0]).format('YYYY-MM-DD') + ' 00:00:00';
+           saveObj.end = moment(er[1]).format('YYYY-MM-DD') + ' 23:59:59';
            saveObj.resourceId = this.form.userId;
            refetchEvents();
            this.editing = false;
