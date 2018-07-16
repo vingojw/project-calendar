@@ -21,6 +21,9 @@
       .menu-item{border: 1px solid #ccc; padding: 3px; border-radius: 4px; font-size: 14px; background: #f5f5f5; cursor: pointer;}
       .fc-sat,.fc-sun{background: #f7f6f6;}
       [data-resource-id]:hover{background: rgba(247, 255, 237, 0.6);}
+      .backlog-del{
+        position: absolute;right: 0;cursor: pointer;width: 15px;text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -65,7 +68,7 @@
           <div style="width:400px;">
             待定：
             <div id="external-events">
-                <div class='fc-event' @click="editBacklog(item)" v-for="item in backLogList" :title="item.start.split(' ')[0]+'~'+item.end.split(' ')[0]" v-text="item.title" :e="JSON.stringify(item)"></div>
+                <div class='fc-event' @click="editBacklog(item)" v-for="item in backLogList" :title="item.start.split(' ')[0]+'~'+item.end.split(' ')[0]" :e="JSON.stringify(item)"> <span v-text="item.title"></span> <span class="backlog-del" @click.stop="delBackLog(item)">x</span></div>
             </div>
           </div>
         </el-col>
@@ -247,6 +250,12 @@
            });
 
            var saveObj = we || bc ;
+           if(!saveObj){
+              //先点下backlog，然后再点删除，再点保存，此时events 和 backlog 都找不到，所以清空表单
+              this.editing = false;
+              this.$refs['form'].resetFields();
+              return;
+           }
            var er  = this.form.eventRange;
            saveObj.title = this.form.eventName;
            saveObj.start = moment(er[0]).format('YYYY-MM-DD') + ' 00:00:00';
@@ -270,6 +279,10 @@
            vm.editing = true;
            vm.editingBacklog = true;
          },
+         delBackLog:function(item){
+            this.backLogList.splice(this.backLogList.indexOf(item),1);
+            refetchBacklogs();
+         }
        }
     });
   }
