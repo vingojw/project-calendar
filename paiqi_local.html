@@ -434,6 +434,12 @@
       }
     };
     $('#calendar').fullCalendar(cfg);
+    $('#calendar').find('[data-date]').each(function(a,b){
+        var today = moment(new Date()).format('YYYY-MM-DD');
+        if($(b).data('date')==today){
+          $(b).closest('.fc-scroller').scrollLeft(cfg.slotWidth*a);
+        }
+    });
   }
 
   // readjust sizing after font load
